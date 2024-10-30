@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Chat App 1</title>
+</head>
+    <body>
+        <input id="inputText" Type="text">
+        <input id="sendButton" Type="submit">
+        <ul id="messageList"></ul>
+
+        <!-- ライブラリ読み込み -->
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            // サーバーに接続
+            const socket = io();
+
+            const clearText = () => {
+                document.getElementById('inputText').value = '';
+            }
+
+            const addMessageList = (message) => {
+                const ul = document.getElementById('messageList');
+                const li = document.createElement('li');
+                const text = document.createTextNode(message);
+                li.appendChild(text);
+                ul.appendChild(li);
+            };
+
+            // 送信ボタンのクリックイベント検知
+            document.getElementById('sendButton').addEventListener('click', () => {
+
+                // inputに入力されたテキスト取得
+                let inputMessage = document.getElementById('inputText').value;
+
+                if (inputMessage === '') {
+                    return;
+                }
+
+                // 'sendMessage'イベントを発火しメッセージ受信
+                socket.emit('sendMessage', inputMessage);
+
+                // input内テキストを空にする
+                clearText()
+            });
+
+            // 'receiveMessage'イベントの発火を検知
+            // 第一引数には受信したメッセージが入る
+            socket.on('receiveMessage', (message) => {
+                //受信したメッセージをulタグに挿入
+                addMessageList(message);
+            });
+        </script>
+    </body>
+</html>
