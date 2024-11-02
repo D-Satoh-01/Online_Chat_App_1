@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 // 3000番ポートでhttpサーバー起動
 server.listen(PORT, () => {
-    console.log(`listening on port) ${PORT}`);
+    console.log(`listening on port ${PORT}`);
 });
 
 // クライアントと接続できたら通知を表示する
