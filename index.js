@@ -24,11 +24,19 @@ server.listen(PORT, () => {
 io.on('connection', (socket) => {
     console.log('a user connected')
 
+    // ユーザー名の入力を受信
+    socket.on('setUserName', function (userName) {
+        if(!userName) userName = '匿名';
+    
+        socket.userName = userName;
+    });
+
     // 'sendMessage'というイベント名で受信
     socket.on('sendMessage', (message) => {
         console.log('Message has been sent: ', message);
 
         //'receiveMessage'イベントを発火、受信したメッセージを全クライアントに送信
-        io.emit('receiveMessage', message);
+        io.emit('receiveMessage', socket.userName + "： " + message);
     });
 });
+
